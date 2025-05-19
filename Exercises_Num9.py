@@ -72,15 +72,30 @@ for train_index, val_index in split.split(X_trainVal,y_trainVal):
     X_val  =X_trainVal[val_index]
     y_val  =y_trainVal[val_index]
 
-#print(len(X_train)) #48000
-#print(len(y_train)) #48000
-#print(len(X_val))   #12000
-#print(len(y_val))   #12000
+# print(len(X_train)) #48000
+# print(len(y_train)) #48000
+# print(len(X_val))   #12000
+# print(len(y_val))   #12000
 
-#some_digit_X_train = X_train[2]
-#some_digit_X_train_image = some_digit_X_train.reshape(28,28)
+# some_digit_X_train = X_train[32]
+# some_digit_X_train_image = some_digit_X_train.reshape(28,28)
 
-#print(y_train[2])
-#plt.imshow(some_digit_X_train_image,cmap="binary")
-#plt.axis('off')
-#plt.show()
+# print(y_train[32])
+# plt.imshow(some_digit_X_train_image,cmap="binary")
+# plt.axis('off')
+# plt.show()
+
+#############################################################################################
+#step 4: training modes with lineSVC and SVC(kenal=RBF)
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm  import LinearSVC
+
+svm_clf=Pipeline([('scaler',StandardScaler()),
+                  ('linear_svc',LinearSVC(C=1,loss='hinge')),])
+svm_clf.fit(X_train,y_train)
+
+y_val_pred=svm_clf.predict(X_val)
+from sklearn.metrics import precision_score,recall_score
+print(precision_score(y_val,y_val_pred))
+print(recall_score(y_val,y_val_pred))
