@@ -7,16 +7,16 @@
 
 #############################################################################################
 #analysis:
-#step 1: download MINIST data
-#step 2: plot(data)
-#step 3: prepare data for training&validation
+#step 1: Load MINIST data  & plot(data)
+#step 2: split data
+#step 3: Create pipeline and train modes with lineSVC and SVC(kenal=RBF)
 #step 4: training modes with lineSVC and SVC(kenal=RBF)
 #step 5: evaluate the classifiers perfromance
 #step 6: error analysis---find ways to improve it.
 ##############################################################################################
 
 ##############################################################################################
-#step 1: download MINIST data
+#step 1: Load MINIST data  & plot(data)
 
 from sklearn.datasets import fetch_openml
 mnist=fetch_openml("mnist_784",version=1)    #dictionary data structure
@@ -24,10 +24,6 @@ mnist.keys()
 #print(mnist.keys())
 #dict_keys(['data', 'target', 'frame', 'categories', 'feature_names', 'target_names', 'DESCR', 'details', 'url'])
 
-
-
-##############################################################################################
-#step 2:plot(data)
 import numpy as np
 X,y=mnist['data'],mnist['target']
 X=X.to_numpy()
@@ -53,7 +49,7 @@ some_digit_image = some_digit.reshape(28,28)
 
 
 #########################################################################################
-#step 3: prepare data for training&validation
+#step 2: split data 
 #input: X[70000][728], y[70000]
 #output: strat_Xtrain_set[60000*0.8][728]
 #        strat_Xval_set[60000*0.1][728]
@@ -86,7 +82,7 @@ for train_index, val_index in split.split(X_trainVal,y_trainVal):
 # plt.show()
 
 #############################################################################################
-#step 4: training modes with lineSVC and SVC(kenal=RBF)
+#step 3: Create pipeline and train modes with lineSVC and SVC(kenal=RBF)
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm  import LinearSVC
@@ -95,7 +91,20 @@ svm_clf=Pipeline([('scaler',StandardScaler()),
                   ('linear_svc',LinearSVC(C=1,loss='hinge')),])
 svm_clf.fit(X_train,y_train)
 
+
+
+
+#############################################################################################
+#step 4: Predict and evaluate
+from sklearn.metrics import accuracy_score,classification_report
+
 y_val_pred=svm_clf.predict(X_val)
-from sklearn.metrics import precision_score,recall_score
-print(precision_score(y_val,y_val_pred))
-print(recall_score(y_val,y_val_pred))
+print('Accuracy:',accuracy_score(y_val,y_val_pred))
+
+# more specific metrics
+print('more specific metrics:',classification_report(y_val,y_val_pred))
+
+# from sklearn.metrics import precision_score,recall_score
+# print(precision_score(y_val,y_val_pred))
+# print(recall_score(y_val,y_val_pred))
+
