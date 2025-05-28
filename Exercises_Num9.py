@@ -108,3 +108,16 @@ print('more specific metrics:',classification_report(y_val,y_val_pred))
 # print(precision_score(y_val,y_val_pred))
 # print(recall_score(y_val,y_val_pred))
 
+
+# confusion matrix
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+cm=confusion_matrix(y_val,y_val_pred)
+# visualization confusion matrix
+plt.figure(figsize=(10,8))
+sns.heatmap(cm,annot=True,fmt='d',cmap='Blues')
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.title('Confusion Matrix')
+plt.show()
+
