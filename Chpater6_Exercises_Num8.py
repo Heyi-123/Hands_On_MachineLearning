@@ -43,35 +43,28 @@ plt.show()
 #Split datasets
 X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)
 
-# ss=ShuffleSplit(n_splits=1000,test_size=100,random_state=42)
-# for _, subset_index in ss.split(X,y):
-#     X_train=X_trainVal[train_index]
-#     y_train=y_trainVal[train_index]
-#     X_val  =X_trainVal[val_index]
-#     y_val  =y_trainVal[val_index]
-
-
-split=StratifiedShuffleSplit(n_splits=1,test_size=0.2,random_state=42)
-for train_index, val_index in split.split(X_trainVal,y_trainVal):
-    X_train=X_trainVal[train_index]
-    y_train=y_trainVal[train_index]
-    X_val  =X_trainVal[val_index]
-    y_val  =y_trainVal[val_index]
-
-
-
-
-#(traing)&&(Find the best estimator)
+#(training)&(prediction)&(best estimator)
 param_grid={'max_leaf_nodes':[5,10,15,20,25]}
 dtc=DecisionTreeClassifier(random_state=42)
-grid_search=GridSearchCV(dtc,param_grid,cv=5)
+grid_search=GridSearchCV(dtc,param_grid,cv=5)   
 grid_search.fit(X_train,y_train)
 
 
 #evaluate the classifiers
 best_dtc=grid_search.best_estimator_
-# print(best_dtc)
+print(best_dtc)
 best_dtc.fit(X_train,y_train)
 y_pred=best_dtc.predict(X_test)
 accuracy=accuracy_score(y_test,y_pred)
 print(accuracy)
+
+print('DecisionTreeClassifier(max_leaf_nodes=15, random_state=42)')
+
+#illustrate random forest!
+ss=ShuffleSplit(n_splits=1000,test_size=100,random_state=42)
+for _, subset_index in ss.split(X_train,y_train):
+    X_subset=X_trainVal[subset_index]
+    y_subset=y_trainVal[subset_index]
+
+
+
