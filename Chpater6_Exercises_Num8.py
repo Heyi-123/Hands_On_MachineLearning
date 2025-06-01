@@ -43,6 +43,14 @@ plt.show()
 #Split datasets
 X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)
 
+# ss=ShuffleSplit(n_splits=1000,test_size=100,random_state=42)
+# for _, subset_index in ss.split(X,y):
+#     X_train=X_trainVal[train_index]
+#     y_train=y_trainVal[train_index]
+#     X_val  =X_trainVal[val_index]
+#     y_val  =y_trainVal[val_index]
+
+
 split=StratifiedShuffleSplit(n_splits=1,test_size=0.2,random_state=42)
 for train_index, val_index in split.split(X_trainVal,y_trainVal):
     X_train=X_trainVal[train_index]
