@@ -57,14 +57,48 @@ best_dtc.fit(X_train,y_train)
 y_pred=best_dtc.predict(X_test)
 accuracy=accuracy_score(y_test,y_pred)
 print(accuracy)
+#Answer: 0.855
+
 
 print('DecisionTreeClassifier(max_leaf_nodes=15, random_state=42)')
 
-#illustrate random forest!
-ss=ShuffleSplit(n_splits=1000,test_size=100,random_state=42)
-for _, subset_index in ss.split(X_train,y_train):
-    X_subset=X_trainVal[subset_index]
-    y_subset=y_trainVal[subset_index]
+##############################################################################################
+##############################################################################################
+#Part2: illustrate random forest!
+###############################################################################################
+import numpy as np
 
+best_params={'max_leaf_nodes':15} 
+trees=[]
+test_scores=[]
 
+#generate 1000 subsets from training dataset
+ss=ShuffleSplit(n_splits=1000,train_size=100,random_state=42)
+subsets=[(train_idx, _) for train_idx, _ in ss.split(X_train,y_train)]
 
+# train(1000 trees) based on 1000 subsets,  
+# predict(X_test), 
+# save(predict score).
+for train_idx,_ in subsets:
+   X_sub=X_train[train_idx]
+   y_sub=y_train[train_idx]
+   tree=DecisionTreeClassifier(**best_params,random_state=42)   # (**best_params) -->unpack dict 
+   tree.fit(X_sub,y_sub)
+   trees.append(tree)
+   score=tree.score(X_test,y_test)
+   test_scores.append(score)
+
+#get know average accuracy 0f 1000 trees predictions.
+print(f"single tree average accuracy:{np.mean(test_scores):.3f}")
+#Answer: single tree average accuracy:0.804
+
+#Ensemble learning with majority voting
+all_predictions = np.array([tree.predict(X_test) for tree in trees])
+print(f'all_predictions shape is:{all_predictions.shape}')
+
+from scipy.stats import mode
+majority_votes=mode(all_predictions,axis=0)[0].ravel()
+
+#evaluate the ensemble mode
+ensemble_accuracy=accuracy_score(y_test,majority_votes)
+print(f'random forest accuracy:{ensemble_accuracy:.3f}')
