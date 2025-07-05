@@ -1,12 +1,15 @@
 ####################################################################################################################
-#Exercises_Num7: Train and fine tune a Decision Tree for the moons dataset by following these steps:
-#a, Use make_moons(n_samples=10000,noise=0.4) to generate a moons dataset.
-#b, Use train_test_split() to split the dataset into a training set and a test set.
-#c, Use grid search with cross-validation (with the help of the GridSearchCV class) to find good hyperparameter values 
-#     for a DecisionTreeClassifier.
-#     Hint:try various values for max_leaf_nodes.
-#, Train it on the full training set using these hyperparameters, and measure your model's performance on the test set.
-#     You should get roughly 85% to 87% accuracy.
+#Exercises_Num9: 
+#   1, run the individual classifiers from the previous exercise to make predictions on the validation set,
+#   2, and create a new training set with the resulting predictions:
+#           each training instance is a vector containing the set of predictions from all your classifiers for an image,
+#           and the target is the image's class.
+#   3, train a classifier on this new training set.
+#   congradulations, you have just trained a blender, and together with the classifiers it forms a stacking ensemble!
+#   4, Now, evaluate the ensemble on the test set:
+#           (4.1) make predictions with all your classifiers,
+#           (4.2) then feed the predictions to the blender to get the blender to get the ensemble's predictions.
+#           (4.3) how does it compare to the volting classifier you trained earlier?
 ####################################################################################################################
 
 
