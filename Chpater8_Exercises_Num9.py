@@ -97,9 +97,17 @@ print('5,Next, use PCA to reduce the dadasets dimensionality, with an explained 
 ##################################################################################################################
 from sklearn.decomposition import PCA
 pca=Pipeline([('scaler',StandardScaler()),
-              ('rf_clf',PCA(n_components=0.95))])
-X_reduced=pca.fit_transform(X_train)
+              ('pca',PCA(n_components=0.95,random_state=42))])
+# pca=PCA(n_components=0.95,random_state=42)
+trainPca_start_dt=datetime.now()
+X_train_reduced=pca.fit_transform(X_train)
+trainPca_end_dt=datetime.now()
 
+X_test_reduced=pca.transform(X_test)
+
+trainPca_duration_dt=trainPca_end_dt-trainPca_start_dt
+print(f'5.1,train set pca time:{trainPca_duration_dt}') 
+print(f'5.2,train set reduced shape:{X_train_reduced.shape}') 
 ##################################################################################################################
 #6, train a new random forest classifier on the reduced dataset and see how long it takes.
 print('6,train a new random forest classifier on the reduced dataset and see how long it takes:--------')
@@ -107,12 +115,12 @@ print('6,train a new random forest classifier on the reduced dataset and see how
 pca_rdf_clf=RandomForestClassifier(n_estimators=500,min_samples_split=10,n_jobs=-1)
 
 
-pca_start_dt=datetime.now()
-pca_rdf_clf.fit(X_reduced,y_train)
-pca_end_dt=datetime.now()
+trainPca_training_start_dt=datetime.now()
+pca_rdf_clf.fit(X_train_reduced,y_train)
+trainPca_training_end_dt=datetime.now()
 
-pca_duration_dt=pca_end_dt-pca_start_dt 
-print(f'pca+Random forest train time:{pca_duration_dt}')
+trainPca_training_duration_dt=trainPca_training_end_dt-trainPca_training_start_dt 
+print(f'pca+rdf train time:{trainPca_training_duration_dt}')
 
 ##################################################################################################################
 #7, Was training much faster? 
@@ -121,12 +129,12 @@ print(f'pca+Random forest train time:{pca_duration_dt}')
 ##################################################################################################################
 #8, Next, evaluate the classifier on the test set. How does it compare to the previous classifier?
 ##################################################################################################################
-X_test_reduced=pca.transform(X_test)
-y_test_pre_pca=pca_rdf_clf.predict(X_test_reduced)
+
+y_test_pca_pre=pca_rdf_clf.predict(X_test_reduced)
 
 print(f'Random forest evaluation matrix:-------------------')
-print(f'(1), random frorest accuracy score is: {accuracy_score(y_test,y_test_pre_pca)}')
-print(f'(2), random frorest clssification report is: {classification_report(y_test,y_test_pre_pca)}')
+print(f'(1), random frorest accuracy score is: {accuracy_score(y_test,y_test_pca_pre)}')
+print(f'(2), random frorest clssification report is: {classification_report(y_test,y_test_pca_pre)}')
 # #################################################################################
 # #(3.1) LinearSVC
 # #################################################################################
